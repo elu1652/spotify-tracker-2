@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
-import { saveTokens, getAccessToken, refreshAccessToken, extractTokenFromUrl, getRefreshToken, validateToken } from '../auth';
+import { authorize,saveTokens, getAccessToken, refreshAccessToken, extractTokenFromUrl, getRefreshToken, validateToken } from '../auth';
 import { useNavigate } from 'react-router-dom';
 
 const Home: React.FC = () => {
-
+  
   const navigate = useNavigate();
 
   const clientId = import.meta.env.VITE_CLIENT_ID;
@@ -48,7 +48,8 @@ const Home: React.FC = () => {
         }
       }
     } else {
-      window.location.href = authUrl; // Redirect to Spotify Authorization page
+      authorize()//window.location.href = authUrl; // Redirect to Spotify Authorization page
+
     }
   };
 

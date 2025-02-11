@@ -4,6 +4,8 @@ const getTokens = async (code: string): Promise<boolean> => {
     const clientId = import.meta.env.VITE_CLIENT_ID;
     const clientSecret = import.meta.env.VITE_CLIENT_SECRET;
     const redirectUri = import.meta.env.VITE_REDIRECT_URI;
+
+    console.log("here")
   
     const response = await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',
@@ -24,6 +26,7 @@ const getTokens = async (code: string): Promise<boolean> => {
     }
   
     const data = await response.json();
+    console.log("data",data)
     localStorage.setItem('access_token',data.access_token);
     localStorage.setItem('refresh_token',data.refresh_token);
     
@@ -35,10 +38,10 @@ const handleAuthRedirect = async () => {
     const code = urlParams.get('code');
     console.log("code",code);
     if(code){
-        getTokens(code);
+        await getTokens(code);
     }
 }
-const authorize = () => {
+const authorize = async () => {
     const clientId = import.meta.env.VITE_CLIENT_ID;
     const redirectUri = import.meta.env.VITE_REDIRECT_URI;
     const scope = 'user-read-private user-read-email user-read-recently-played'; // Define the scope you need
@@ -87,6 +90,7 @@ const saveTokens = (accessToken: string, refreshToken: string): void => {
   const refreshAccessToken = async (): Promise<string | null> => {
     const refreshToken = localStorage.getItem('refresh_token');
     if(!refreshToken) {
+      console.log("no refresh token")
       authorize();
     }
     if (!refreshToken) return null;
@@ -147,5 +151,5 @@ const saveTokens = (accessToken: string, refreshToken: string): void => {
     }
   };
   
-  export { handleAuthRedirect, saveTokens, getAccessToken, getRefreshToken, extractTokenFromUrl, refreshAccessToken, getValidToken, validateToken };
+  export { authorize,handleAuthRedirect, saveTokens, getAccessToken, getRefreshToken, extractTokenFromUrl, refreshAccessToken, getValidToken, validateToken, getTokens };
   
